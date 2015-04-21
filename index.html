@@ -5,8 +5,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="picker/spectrum.css">
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.js"></script>
+    <script type='text/javascript' src="picker/spectrum.js"></script>
+    <script type='text/javascript'>
+      function GetURLParameter(sParam){
+          var sPageURL = window.location.search.substring(1);
+          var sURLVariables = sPageURL.split('&');
+          for (var i = 0; i < sURLVariables.length; i++) 
+          {
+              var sParameterName = sURLVariables[i].split('=');
+              if (sParameterName[0] == sParam) 
+              {
+                  return sParameterName[1];
+              }
+          }
+      }
+    </script>
   </head>
   <body>
     <div data-role="page" id="main">
@@ -51,10 +67,43 @@
 
     </div>
     
-<div data-role="collapsible">
+<div data-role="collapsible" align="center" id="basalt-colours">
         <h3>Colours</h3>
+        <i>An exclusive section for you, my Pebble Time owning friend :)</i>
 
-Coming soon...
+    <h4>Background Colour</h4>
+    <div class="btn-group" data-toggle="buttons">
+      <input name="bgcolour" id="bgcolour" class="picker">
+    </div>
+
+    <h4>Number Colour</h4>
+    <div class="btn-group" data-toggle="buttons">
+      <input name="numcolour" id="numcolour" class="picker">
+    </div>
+
+</div>
+
+<div data-role="collapsible">
+        <h3>Effects</h3>
+<i>Cheers to Yuriy Galanter for his work on the <a href="https://github.com/ygalanter/EffectLayer">EffectLayer</a>.</i><br>
+    
+<fieldset data-role="controlgroup" data-type="vertical" data-mini="true">
+    <legend>Invert</legend>
+        <input name="key3" id="key3-0" data-type="int" value="0" checked="checked" type="radio">
+        <label for="key3-0">Off</label>
+        <input name="key3" id="key3-1" data-type="int" value="1" type="radio">
+        <label for="key3-1">On</label>
+</fieldset>
+
+<fieldset data-role="controlgroup" data-type="vertical" data-mini="true">
+    <legend>Rotate 90 degrees</legend>
+        <input name="key4" id="key4-0" data-type="int" value="0" checked="checked" type="radio">
+        <label for="key4-0">Off</label>
+        <input name="key4" id="key4-1" data-type="int" value="1" type="radio">
+        <label for="key4-1">On - For right-wrist wearers</label>
+        <input name="key4" id="key4-2" data-type="int" value="2" type="radio">
+        <label for="key4-2">On - For left-wrist wearers</label>
+</fieldset>
 
 </div>
 
@@ -74,10 +123,42 @@ Coming soon...
           'btdisalert':     Number( $("input[name=key0]:checked").val() ),
           'btrealert':     Number( $("input[name=key1]:checked").val() ),
           'bootanim':     Number( $("input[name=key2]:checked").val() ),
+          'effect_invert':     Number( $("input[name=key3]:checked").val() ),
+          'effect_rotate':     Number( $("input[name=key4]:checked").val() ),
+          'colour_background': $("#bgcolour").spectrum("get").toHexString().replace('#', ''),
+          'colour_number': $("#numcolour").spectrum("get").toHexString().replace('#', '')
         }
         return options;
       }
       $().ready(function() {
+
+        var watchIsBasalt = GetURLParameter("watchIsBasalt");
+        console.log("is basalt " + watchIsBasalt);
+
+        if(watchIsBasalt === "true" || watchIsBasalt === 1 || watchIsBasalt === "1"){
+          $(".picker").spectrum({
+                  showPaletteOnly: true,
+                  hideAfterPaletteSelect: true,
+                  preferredFormat: "hex3",
+                  palette: [
+                    [ '000', '005', '00a', '00f', '050', '055', '05a', '05f' ],
+                    [ '500', '505', '50a', '50f', '550', '555', '55a', '55f' ],
+                    [ 'a00', 'a05', 'a0a', 'a0f', 'a50', 'a55', 'a5a', 'a5f' ],
+                    [ 'f00', 'f05', 'f0a', 'f0f', 'f50', 'f55', 'f5a', 'f5f' ],
+                    [ '0a0', '0a5', '0aa', '0af', '0f0', '0f5', '0fa', '0ff' ],
+                    [ '5a0', '5a5', '5aa', '5af', '5f0', '5f5', '5fa', '5ff' ],
+                    [ 'aa0', 'aa5', 'aaa', 'aaf', 'af0', 'af5', 'afa', 'aff' ],
+                    [ 'fa0', 'fa5', 'faa', 'faf', 'ff0', 'ff5', 'ffa', 'fff' ]
+                  ]
+                }
+          );
+        }
+        else{
+          console.log("watch isn't basalt :(");
+            console.log("lik dis if u crie evertim");
+            document.getElementById("basalt-colours").style.display = 'none';
+        }
+
        if (typeof window.localStorage !== "undefined") {
        	console.log("Not undefined :)");
         if (window.localStorage.mosaic) {
@@ -89,14 +170,20 @@ Coming soon...
           $("input[name=key1]").checkboxradio('refresh');
           $("input[name=key2][id=key2-"+ls_pto["bootanim"]+"]").prop('checked',true);
           $("input[name=key2]").checkboxradio('refresh');
+          $("input[name=key3][id=key3-"+ls_pto["effect_invert"]+"]").prop('checked',true);
+          $("input[name=key3]").checkboxradio('refresh');
+          $("input[name=key4][id=key4-"+ls_pto["effect_rotate"]+"]").prop('checked',true);
+          $("input[name=key4]").checkboxradio('refresh');
         }
        }
+
         $("#b-cancel").click(function() {
           console.log("Cancel");
           document.location = "pebblejs://close";
         });
         $("#b-submit").click(function() {
           console.log("Submit");
+
           ls_pto = JSON.stringify(saveOptions());
           if (typeof window.localStorage !== "undefined") {
             window.localStorage.mosaic = ls_pto;
