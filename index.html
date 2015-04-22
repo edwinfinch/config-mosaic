@@ -76,7 +76,7 @@
         <label for="key2-2">Slow</label>
 </fieldset>
 
-<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true" id="constanimation">
     <legend>Constant Animation</legend>
     <i>This will drain your battery, but it looks pretty! Colours change 8 times every second.</i>
         <input name="key5" id="key5-0" data-type="int" value="0" type="radio">
@@ -179,6 +179,7 @@
           console.log("watch isn't basalt :(");
             console.log("lik dis if u crie evertim");
             document.getElementById("basalt-colours").style.display = 'none';
+            document.getElementById("constanimation").style.display = 'none';
         }
        if (typeof window.localStorage !== "undefined") {
        	console.log("Not undefined :)");
