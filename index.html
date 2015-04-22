@@ -23,6 +23,15 @@
           }
       }
     </script>
+    <style>
+	  /* Hides unwanted dropshadows on text input */
+      .removeBorder > div {
+          border-color: transparent !important;
+          background: transparent !important;
+          text-shadow: none !important;
+          box-shadow: none !important;
+      }
+    </style>
   </head>
   <body>
     <div data-role="page" id="main">
@@ -83,12 +92,12 @@
         <i>An exclusive section for you, my Pebble Time owning friend :)</i>
 
     <h4>Background Colour</h4>
-    <div class="btn-group" data-toggle="buttons">
+    <div class="btn-group removeBorder" data-toggle="buttons">
       <input name="bgcolour" id="bgcolour" class="picker">
     </div>
 
     <h4>Number Colour</h4>
-    <div class="btn-group" data-toggle="buttons">
+    <div class="btn-group removeBorder" data-toggle="buttons">
       <input name="numcolour" id="numcolour" class="picker">
     </div>
 
@@ -146,10 +155,8 @@
         return options;
       }
       $().ready(function() {
-
         var watchIsBasalt = GetURLParameter("watchIsBasalt");
         console.log("is basalt " + watchIsBasalt);
-
         if(watchIsBasalt === "true" || watchIsBasalt === 1 || watchIsBasalt === "1"){
           $(".picker").spectrum({
                   showPaletteOnly: true,
@@ -173,7 +180,6 @@
             console.log("lik dis if u crie evertim");
             document.getElementById("basalt-colours").style.display = 'none';
         }
-
        if (typeof window.localStorage !== "undefined") {
        	console.log("Not undefined :)");
         if (window.localStorage.mosaic) {
@@ -191,20 +197,17 @@
           $("input[name=key4]").checkboxradio('refresh');
           $("input[name=key5][id=key5-"+ls_pto["constant_animation"]+"]").prop('checked',true);
           $("input[name=key5]").checkboxradio('refresh');
-
           //Colours
           $("#bgcolour").spectrum("set", localStorage.getItem("bgcolour"));
           $("#numcolour").spectrum("set", localStorage.getItem("numcolour"));
         }
        }
-
         $("#b-cancel").click(function() {
           console.log("Cancel");
           document.location = "pebblejs://close";
         });
         $("#b-submit").click(function() {
           console.log("Submit");
-
           ls_pto = JSON.stringify(saveOptions());
           if (typeof window.localStorage !== "undefined") {
             window.localStorage.mosaic = ls_pto;
@@ -214,7 +217,6 @@
           console.log(location);
           document.location = location;
         });
-        $('.sp-replacer').unwrap();
       });
     </script>
   </body>
