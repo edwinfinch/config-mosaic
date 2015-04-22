@@ -36,7 +36,7 @@
     <div data-role="collapsible">
         <h3>General</h3>
 
-<fieldset data-role="controlgroup" data-type="vertical" data-mini="true">
+<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
     <legend>Bluetooth Disconnect Alert</legend>
         <input name="key0" id="key0-0" data-type="int" value="0" type="radio">
         <label for="key0-0">Off</label>
@@ -44,7 +44,7 @@
         <label for="key0-1">On</label>
 </fieldset>
 
-<fieldset data-role="controlgroup" data-type="vertical" data-mini="true">
+<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
     <legend>Bluetooth Reconnect Alert</legend>
         <input name="key1" id="key1-0" data-type="int" value="0" checked="checked" type="radio">
         <label for="key1-0">Off</label>
@@ -65,6 +65,15 @@
         <label for="key2-1">Fast</label>
         <input name="key2" id="key2-2" data-type="int" value="2" type="radio">
         <label for="key2-2">Slow</label>
+</fieldset>
+
+<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    <legend>Constant Animation</legend>
+    <i>This will drain your battery, but it looks pretty! Colours change 8 times every second.</i>
+        <input name="key5" id="key5-0" data-type="int" value="0" type="radio">
+        <label for="key5-0">Off</label>
+        <input name="key5" id="key5-1" data-type="int" value="1" checked="checked" type="radio">
+        <label for="key5-1">On</label>
 </fieldset>
 
     </div>
@@ -99,6 +108,7 @@
 
 <fieldset data-role="controlgroup" data-type="vertical" data-mini="true">
     <legend>Rotate 90 degrees</legend>
+    <i>Warning: Rotation may cause unexpected results and is known to cause a slight shift in colour alignment.</i>
         <input name="key4" id="key4-0" data-type="int" value="0" checked="checked" type="radio">
         <label for="key4-0">Off</label>
         <input name="key4" id="key4-1" data-type="int" value="1" type="radio">
@@ -127,9 +137,12 @@
           'bootanim':     Number( $("input[name=key2]:checked").val() ),
           'effect_invert':     Number( $("input[name=key3]:checked").val() ),
           'effect_rotate':     Number( $("input[name=key4]:checked").val() ),
+          'constant_animation':     Number( $("input[name=key5]:checked").val() ),
           'colour_background': $("#bgcolour").spectrum("get").toHexString().replace('#', ''),
           'colour_number': $("#numcolour").spectrum("get").toHexString().replace('#', '')
         }
+        localStorage.setItem("bgcolour", $("#bgcolour").spectrum("get").toHexString().replace('#', ''));
+        localStorage.setItem("numcolour", $("#numcolour").spectrum("get").toHexString().replace('#', ''));
         return options;
       }
       $().ready(function() {
@@ -176,6 +189,13 @@
           $("input[name=key3]").checkboxradio('refresh');
           $("input[name=key4][id=key4-"+ls_pto["effect_rotate"]+"]").prop('checked',true);
           $("input[name=key4]").checkboxradio('refresh');
+          $("input[name=key5][id=key5-"+ls_pto["constant_animation"]+"]").prop('checked',true);
+          $("input[name=key5]").checkboxradio('refresh');
+
+          //Colours
+          $("#bgcolour").spectrum("set", localStorage.getItem("bgcolour"));
+          $("#numcolour").spectrum("set", localStorage.getItem("numcolour"));
+
         }
        }
 
