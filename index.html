@@ -22,6 +22,10 @@
               }
           }
       }
+
+      function watchIsBasalt(){
+        return (GetURLParameter("watchIsBasalt") === "true" || GetURLParameter("watchIsBasalt") !== "false");
+      }
     </script>
     <style>
 	  /* Hides unwanted dropshadows on text input */
@@ -139,6 +143,14 @@
       </div>
     </div>
     <script>
+      function getColourValue(id){
+        if(watchIsBasalt()){
+          return $(id).spectrum("get").toHexString().replace('#', '');
+        }
+        else{
+          return "GColorBullshit";
+        }
+      }
       function saveOptions() {
         var options = {
           'btdisalert':     Number( $("input[name=key0]:checked").val() ),
@@ -147,17 +159,18 @@
           'effect_invert':     Number( $("input[name=key3]:checked").val() ),
           'effect_rotate':     Number( $("input[name=key4]:checked").val() ),
           'constant_animation':     Number( $("input[name=key5]:checked").val() ),
-          'colour_background': $("#bgcolour").spectrum("get").toHexString().replace('#', ''),
-          'colour_number': $("#numcolour").spectrum("get").toHexString().replace('#', '')
+          'colour_background': getColourValue("#bgcolour"),
+          'colour_number': getColourValue("#numcolour")
         }
-        localStorage.setItem("bgcolour", $("#bgcolour").spectrum("get").toHexString().replace('#', ''));
-        localStorage.setItem("numcolour", $("#numcolour").spectrum("get").toHexString().replace('#', ''));
+        if(watchIsBasalt()){
+          localStorage.setItem("bgcolour", $("#bgcolour").spectrum("get").toHexString().replace('#', ''));
+          localStorage.setItem("numcolour", $("#numcolour").spectrum("get").toHexString().replace('#', ''));
+        }
         return options;
       }
       $().ready(function() {
-        var watchIsBasalt = GetURLParameter("watchIsBasalt");
-        console.log("is basalt " + watchIsBasalt);
-        if(watchIsBasalt === "true" || watchIsBasalt === 1 || watchIsBasalt === "1"){
+        console.log("is basalt " + watchIsBasalt());
+        if(watchIsBasalt()){
           $(".picker").spectrum({
                   showPaletteOnly: true,
                   hideAfterPaletteSelect: true,
@@ -199,8 +212,10 @@
           $("input[name=key5][id=key5-"+ls_pto["constant_animation"]+"]").prop('checked',true);
           $("input[name=key5]").checkboxradio('refresh');
           //Colours
-          $("#bgcolour").spectrum("set", localStorage.getItem("bgcolour"));
-          $("#numcolour").spectrum("set", localStorage.getItem("numcolour"));
+          if(watchIsBasalt()){
+            $("#bgcolour").spectrum("set", localStorage.getItem("bgcolour"));
+            $("#numcolour").spectrum("set", localStorage.getItem("numcolour"));
+          }
         }
        }
         $("#b-cancel").click(function() {
